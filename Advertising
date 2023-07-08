@@ -1,0 +1,34 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+advertising = pd.read_csv("C:/Users/SHRI/Downloads/advertising.csv")
+
+advertising.head()
+advertising.info()
+
+X = advertising['TV'].values.reshape(-1, 1)  # Reshape X into a 2D array
+y = advertising['Sales'].values
+
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()  # Create a linear regression object
+model.fit(X_train, y_train)  # Train the model on the training data
+
+
+y_pred = model.predict(X_test)  # Predict sales using the test data
+
+from sklearn.metrics import r2_score
+
+r2_score(y_test, y_pred)  # Calculate R-squared score
+
+plt.scatter(X_test, y_test, color='blue', label='Actual')  # Actual data points
+plt.plot(X_test, y_pred, color='red', linewidth=2, label='Predicted')  # Regression line
+plt.xlabel('TV Advertising')
+plt.ylabel('Sales')
+plt.legend()
+plt.show()
