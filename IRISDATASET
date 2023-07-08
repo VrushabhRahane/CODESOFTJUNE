@@ -1,0 +1,48 @@
+import pandas as pd
+Iris = pd.read_csv("C:/Users/SHRI/Downloads/iris.csv")
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Pairplot - Scatter plot matrix
+sns.set(style="ticks")
+sns.pairplot(Iris, hue="species")
+plt.show()
+
+# Violin plot
+sns.violinplot(x="species", y="sepal_length", data=Iris)
+plt.show()
+
+# Box plot
+sns.boxplot(x="species", y="petal_width", data=Iris)
+plt.show()
+
+# Swarm plot
+sns.swarmplot(x="species", y="petal_length", data=Iris)
+plt.show()
+
+
+# Separate the features (X) and the target variable (y)
+X = Iris.drop('species', axis=1)
+y = Iris['species']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create an SVM classifier
+svm_classifier = SVC()
+
+# Train the classifier using the training data
+svm_classifier.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = svm_classifier.predict(X_test)
+
+# Evaluate the performance of the classifier
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
