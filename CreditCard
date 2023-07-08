@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Load the dataset
+
+creditcard = pd.read_csv("C:/Users/SHRI/Downloads/Dataset Titanic/creditcard.csv")
+
+
+# Explore the dataset
+print(creditcard.head())
+print(creditcard.info())
+print(creditcard['Class'].value_counts())
+
+# Drop any missing values
+df = creditcard.dropna()
+
+# Scale the features
+scaler = StandardScaler()
+creditcard['Amount'] = scaler.fit_transform(creditcard['Amount'].values.reshape(-1, 1))
+
+X = creditcard.drop('Class', axis=1)
+y = creditcard['Class']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print('Accuracy:', accuracy_score(y_test, y_pred))
+print('Confusion Matrix:')
+print(confusion_matrix(y_test, y_pred))
+
+
+cm = confusion_matrix(y_test, y_pred)
+
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title('Confusion Matrix - Credit Card Fraud Detection')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.show()
+
